@@ -30,11 +30,10 @@ const getPlaceById = (req, res, next) => {
     throw new HttpError('Could not find a place for the provided id.', 404);
   }
 
-  res.json({ place }); // => { place } => { place: place }
+  res.json({ place });
 };
 
-// function getPlaceById() { ... }
-// const getPlaceById = function() { ... }
+
 
 const getPlacesByUserId = (req, res, next) => {
   const userId = req.params.uid;
@@ -69,7 +68,6 @@ const createPlace = async (req, res, next) => {
     return next(error);
   }
 
-  // const title = req.body.title;
   const createdPlace = new Place({
     title,
     description,

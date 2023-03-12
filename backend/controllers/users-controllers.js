@@ -30,7 +30,7 @@ const signup = (req, res, next) => {
 
   const createdUser = {
     id: uuid(),
-    name, // name: name
+    name,
     email,
     password
   };
