@@ -3,7 +3,6 @@ const { validationResult } = require('express-validator');
 
 const HttpError = require('../models/http-error');
 const getCoordsForAddress = require('../util/location');
-const Place = require('../models/place');
 
 let DUMMY_PLACES = [
   {
@@ -30,10 +29,11 @@ const getPlaceById = (req, res, next) => {
     throw new HttpError('Could not find a place for the provided id.', 404);
   }
 
-  res.json({ place });
+  res.json({ place }); // => { place } => { place: place }
 };
 
-
+// function getPlaceById() { ... }
+// const getPlaceById = function() { ... }
 
 const getPlacesByUserId = (req, res, next) => {
   const userId = req.params.uid;
@@ -68,25 +68,18 @@ const createPlace = async (req, res, next) => {
     return next(error);
   }
 
-  const createdPlace = new Place({
+  // const title = req.body.title;
+  const createdPlace = {
+    id: uuid(),
     title,
     description,
-    address,
     location: coordinates,
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Empire_State_Building_%28aerial_view%29.jpg/400px-Empire_State_Building_%28aerial_view%29.jpg',
+    address,
     creator
-  });
+  };
 
-  try {
-    await createdPlace.save();
-  } catch (err) {
-    const error = new HttpError(
-      'Creating place failed, please try again.',
-      500
-    );
-    return next(error);
-  }
-  
+  DUMMY_PLACES.push(createdPlace); //unshift(createdPlace)
+
   res.status(201).json({ place: createdPlace });
 };
 
