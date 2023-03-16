@@ -24,7 +24,7 @@ const getPlaceById = async (req, res, next) => {
 
   let place;
   try {
-    place = await Place.findById(placeId);
+    place = await Place.findById(placeId)
   } catch (err) {
     const error = new HttpError(
       'Something went wrong, could not find a place.',
@@ -44,20 +44,18 @@ const getPlaceById = async (req, res, next) => {
   res.json({ place: place.toObject({ getters: true }) }); // => { place } => { place: place }
 };
 
-// function getPlaceById() { ... }
-// const getPlaceById = function() { ... }
 
 const getPlacesByUserId = async (req, res, next) => {
-  const userId = req.params.uid;
+  const userId = req.params.uid
 
   let places;
   try {
-    places = await Place.find({ creator: userId });
+    places = await Place.find({ creator: userId })
   } catch (err) {
     const error = new HttpError(
       'Fetching places failed, please try again later',
       500
-    );
+    )
     return next(error);
   }
 
@@ -71,18 +69,18 @@ const getPlacesByUserId = async (req, res, next) => {
 };
 
 const createPlace = async (req, res, next) => {
-  const errors = validationResult(req);
+  const errors = validationResult(req)
   if (!errors.isEmpty()) {
     return next(
       new HttpError('Invalid inputs passed, please check your data.', 422)
     );
   }
 
-  const { title, description, address, creator } = req.body;
+  const { title, description, address, creator } = req.body
 
-  let coordinates;
+  let coordinates
   try {
-    coordinates = await getCoordsForAddress(address);
+    coordinates = await getCoordsForAddress(address)
   } catch (error) {
     return next(error);
   }
@@ -105,77 +103,77 @@ const createPlace = async (req, res, next) => {
       'Creating place failed, please try again.',
       500
     );
-    return next(error);
+    return next(error)
   }
 
   res.status(201).json({ place: createdPlace });
 };
 
 const updatePlace = async (req, res, next) => {
-  const errors = validationResult(req);
+  const errors = validationResult(req)
   if (!errors.isEmpty()) {
     throw new HttpError('Invalid inputs passed, please check your data.', 422);
   }
 
-  const { title, description } = req.body;
-  const placeId = req.params.pid;
+  const { title, description } = req.body
+  const placeId = req.params.pid
 
-  let place;
+  let place
   try {
-    place = await Place.findById(placeId);
+    place = await Place.findById(placeId)
   } catch (err) {
     const error = new HttpError(
       'Something went wrong, could not update place.',
       500
     );
-    return next(error);
+    return next(error)
   }
 
-  place.title = title;
-  place.description = description;
+  place.title = title
+  place.description = description
 
   try {
-    await place.save();
+    await place.save()
   } catch (err) {
     const error = new HttpError(
       'Something went wrong, could not update place.',
       500
     );
-    return next(error);
+    return next(error)
   }
 
-  res.status(200).json({ place: place.toObject({ getters: true }) });
-};
+  res.status(200).json({ place: place.toObject({ getters: true }) })
+}
 
 const deletePlace = async (req, res, next) => {
-  const placeId = req.params.pid;
+  const placeId = req.params.pid
 
-  let place;
+  let place
   try {
-    place = await Place.findById(placeId);
+    place = await Place.findById(placeId)
   } catch (err) {
     const error = new HttpError(
       'Something went wrong, could not delete place.',
       500
-    );
-    return next(error);
+    )
+    return next(error)
   }
 
   try {
-    await place.remove();
+    await place.remove()
   } catch (err) {
     const error = new HttpError(
       'Something went wrong, could not delete place.',
       500
-    );
-    return next(error);
+    )
+    return next(error)
   }
 
-  res.status(200).json({ message: 'Deleted place.' });
-};
+  res.status(200).json({ message: 'Deleted place.' })
+}
 
-exports.getPlaceById = getPlaceById;
-exports.getPlacesByUserId = getPlacesByUserId;
-exports.createPlace = createPlace;
-exports.updatePlace = updatePlace;
-exports.deletePlace = deletePlace;
+exports.getPlaceById = getPlaceById
+exports.getPlacesByUserId = getPlacesByUserId
+exports.createPlace = createPlace
+exports.updatePlace = updatePlace
+exports.deletePlace = deletePlace
